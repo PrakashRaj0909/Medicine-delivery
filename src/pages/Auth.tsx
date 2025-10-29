@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Pill, User, Mail, Lock, Phone } from "lucide-react";
+import { Pill, User, Mail, Lock, Phone, Truck } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const userType = searchParams.get("type") || "customer";
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({ 
@@ -33,7 +35,7 @@ const Auth = () => {
       if (error) throw error;
       
       toast.success("Welcome back!");
-      navigate("/");
+      navigate(userType === "delivery_partner" ? "/partner" : "/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Login failed");
     } finally {
@@ -46,7 +48,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data: authData, error } = await supabase.auth.signUp({
         email: signupData.email,
         password: signupData.password,
         options: {
@@ -59,6 +61,16 @@ const Auth = () => {
       });
 
       if (error) throw error;
+      
+      // Assign role based on user type
+      if (authData.user) {
+        const role = userType === "delivery_partner" ? "delivery_partner" : "customer";
+        const { error: roleError } = await supabase
+          .from("user_roles")
+          .insert({ user_id: authData.user.id, role });
+        
+        if (roleError) throw roleError;
+      }
       
       toast.success("Account created! You can now sign in.");
       setLoginData({ email: signupData.email, password: "" });
@@ -74,16 +86,30 @@ const Auth = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-glow">
-            <Pill className="w-8 h-8 text-primary-foreground" />
+            {userType === "delivery_partner" ? (
+              <Truck className="w-8 h-8 text-primary-foreground" />
+            ) : (
+              <Pill className="w-8 h-8 text-primary-foreground" />
+            )}
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">MediExpress</h1>
-          <p className="text-muted-foreground">Your trusted medicine delivery partner</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            {userType === "delivery_partner" ? "Delivery Partner Portal" : "MediExpress"}
+          </h1>
+          <p className="text-muted-foreground">
+            {userType === "delivery_partner" 
+              ? "Deliver medicines, save lives" 
+              : "Your trusted medicine delivery partner"}
+          </p>
         </div>
 
         <Card className="shadow-card border-border/50">
           <CardHeader>
             <CardTitle>Get Started</CardTitle>
-            <CardDescription>Sign in or create an account to order medicines</CardDescription>
+            <CardDescription>
+              {userType === "delivery_partner" 
+                ? "Sign in to start delivering medicines" 
+                : "Sign in or create an account to order medicines"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login" className="w-full">

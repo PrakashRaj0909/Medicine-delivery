@@ -77,7 +77,7 @@ const Orders = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-primary-light/10 to-secondary-light/10">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <Button variant="ghost" onClick={() => navigate("/")} className="mb-4">
+          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
@@ -108,7 +108,7 @@ const Orders = () => {
               <CardDescription className="mb-4">
                 Start ordering medicines to see your orders here
               </CardDescription>
-              <Button onClick={() => navigate("/")}>
+              <Button onClick={() => navigate("/dashboard")}>
                 Browse Medicines
               </Button>
             </CardContent>

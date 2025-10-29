@@ -73,12 +73,35 @@ const Dashboard = () => {
     navigate("/auth");
   };
 
-  const addToCart = (medicineId: string) => {
-    setCart(prev => ({
-      ...prev,
-      [medicineId]: (prev[medicineId] || 0) + 1
-    }));
-    toast.success("Added to cart");
+  const addToCart = async (medicineId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate("/auth");
+        return;
+      }
+
+      const { error } = await supabase
+        .from("cart_items")
+        .upsert({
+          user_id: user.id,
+          medicine_id: medicineId,
+          quantity: 1,
+        }, {
+          onConflict: "user_id,medicine_id",
+        });
+
+      if (error) throw error;
+      
+      setCart(prev => ({
+        ...prev,
+        [medicineId]: (prev[medicineId] || 0) + 1
+      }));
+      toast.success("Added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add to cart");
+    }
   };
 
   const filteredMedicines = medicines.filter(med =>
@@ -108,8 +131,16 @@ const Dashboard = () => {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => navigate("/")}
+              >
+                Home
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
                 className="relative"
-                onClick={() => toast.info("Cart feature coming soon!")}
+                onClick={() => navigate("/cart")}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Cart
