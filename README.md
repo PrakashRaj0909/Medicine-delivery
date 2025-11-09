@@ -1,73 +1,150 @@
-# Welcome to your Lovable project
+# MediExpress 🏥💊
 
-## Project info
+A modern medicine delivery platform connecting customers with pharmacies and delivery partners for fast, reliable prescription and OTC medicine delivery.
 
-**URL**: https://lovable.dev/projects/f90f851e-6b4f-477f-8024-7db01496e71d
+## 🚀 Project Structure
 
-## How can I edit this code?
+This is a monorepo containing both frontend and backend applications:
 
-There are several ways of editing your application.
+```
+swift-rx-pulse/
+├── frontend/          # React + TypeScript + Vite
+│   ├── src/
+│   ├── public/
+│   └── package.json
+├── backend/           # Express.js + TypeScript
+│   ├── src/
+│   ├── supabase/
+│   └── package.json
+└── README.md
+```
 
-**Use Lovable**
+## 🛠️ Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f90f851e-6b4f-477f-8024-7db01496e71d) and start prompting.
+### Frontend
+- React 18 with TypeScript
+- Vite for blazing fast builds
+- Tailwind CSS + shadcn/ui components
+- React Router for navigation
+- TanStack Query for data fetching
+- Supabase for authentication & database
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend
+- Node.js with Express.js
+- TypeScript
+- Supabase (PostgreSQL database)
+- RESTful API architecture
 
-**Use your preferred IDE**
+## 📦 Quick Start
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd swift-rx-pulse
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 2. Setup Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your Supabase credentials
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Backend will run on http://localhost:3000
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 3. Setup Frontend
+```bash
+cd frontend
+npm install
+cp .env.example .env
+# Edit .env with your Supabase credentials
+npm run dev
+```
 
-**Use GitHub Codespaces**
+Frontend will run on http://localhost:8080
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔑 Environment Variables
 
-## What technologies are used for this project?
+### Backend (.env)
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+PORT=3000
+FRONTEND_URL=http://localhost:8080
+```
 
-This project is built with:
+### Frontend (.env)
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
+VITE_API_URL=http://localhost:3000
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📱 Features
 
-## How can I deploy this project?
+- ✅ User Authentication (Customer & Delivery Partner)
+- ✅ Medicine Catalog with Search & Filters
+- ✅ Shopping Cart Management
+- ✅ Prescription Upload & Validation
+- ✅ Order Placement & Tracking
+- ✅ Payment Integration (COD & Online)
+- ✅ Delivery Partner Dashboard
+- ✅ Real-time Order Updates
+- ✅ Responsive Design
 
-Simply open [Lovable](https://lovable.dev/projects/f90f851e-6b4f-477f-8024-7db01496e71d) and click on Share -> Publish.
+## 🗃️ Database Schema
 
-## Can I connect a custom domain to my Lovable project?
+The application uses Supabase with the following main tables:
+- `profiles` - User profiles
+- `user_roles` - User role management
+- `medicines` - Medicine catalog
+- `orders` - Order information
+- `order_items` - Order line items
+- `addresses` - Delivery addresses
+- `prescriptions` - Uploaded prescriptions
+- `cart_items` - Shopping cart
 
-Yes, you can!
+## 🚀 Deployment
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Frontend
+Can be deployed to:
+- Vercel
+- Netlify
+- Cloudflare Pages
+- Any static hosting
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Backend
+Can be deployed to:
+- Railway
+- Render
+- Heroku
+- DigitalOcean
+- AWS/GCP/Azure
+
+## 📖 Documentation
+
+- [Frontend README](./frontend/README.md)
+- [Backend README](./backend/README.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👥 Team
+
+Built with ❤️ by the MediExpress team
+
+---
+
+For detailed setup instructions, see the README files in the frontend and backend directories.

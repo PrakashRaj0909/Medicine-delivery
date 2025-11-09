@@ -1,0 +1,44 @@
+[
+  {
+    "id": "MED001",
+    "name": "Dr. Jack R. Frost",
+    "email": "jack.frost@hospital.com",
+    "phone": "+91-9876543210",
+    "licenseNumber": "MED001",
+    "specialty": "General Physician",
+    "hospitalName": "Frost Medical Center",
+    "signaturePath": "uploads/signatures/signature-MED001.png",
+    "signatureHash": "f2eff00ff00ff1eff0eff02ff02fff6ff03ff01ff00ff7eff7efffefffeff00f",
+    "isVerified": true,
+    "isActive": true,
+    "trainedAt": "2025-10-29T19:01:54.868Z"
+  },
+  {
+    "id": "MED002",
+    "name": "Dr. Michael Chen",
+    "email": "michael.chen@hospital.com",
+    "phone": "+91-9876543211",
+    "licenseNumber": "MED002",
+    "specialty": "General Physician",
+    "hospitalName": "City Medical Center",
+    "signaturePath": "uploads/signatures/signature-MED002.png",
+    "signatureHash": "fdbffc1ffc3ffe7ffc7ffc3ffd7ff9fffa1ff01ff01ff01ff03ff83ff8ffffff",
+    "isVerified": true,
+    "isActive": true,
+    "trainedAt": "2025-10-29T19:01:54.897Z"
+  },
+  {
+    "id": "MED003",
+    "name": "Dr. Priya Sharma",
+    "email": "priya.sharma@hospital.com",
+    "phone": "+91-9876543212",
+    "licenseNumber": "MED003",
+    "specialty": "Pediatrician",
+    "hospitalName": "Children Hospital",
+    "signaturePath": "uploads/signatures/signature-MED003.png",
+    "signatureHash": "ffffffffffffffffffffffffcfffc3ffc3fff87ff83f781f7cdfffffffffffff",
+    "isVerified": true,
+    "isActive": true,
+    "trainedAt": "2025-10-29T19:01:54.920Z"
+  }
+]
