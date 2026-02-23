@@ -234,6 +234,26 @@ npm start
 
 The server will start on http://localhost:3000
 
+## Deployment (Render)
+
+Render runs the install step and then the start command. This project uses a `postinstall` hook to compile TypeScript into `dist/`.
+
+**Render settings**
+
+- **Root Directory**: `backend`
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+
+**Environment variables**
+
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/mediexpress?retryWrites=true&w=majority
+JWT_SECRET=replace-with-a-long-random-secret
+JWT_EXPIRES_IN=7d
+NODE_ENV=production
+FRONTEND_URL=https://your-vercel-app.vercel.app
+```
+
 ## API Endpoints
 
 ### Authentication

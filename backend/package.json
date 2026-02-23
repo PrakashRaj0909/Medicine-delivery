@@ -6,13 +6,17 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
+    "postinstall": "npm run build",
     "start": "node dist/index.js",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
     "supabase:reset": "supabase db reset",
     "migrate": "supabase db push"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.77.0",
