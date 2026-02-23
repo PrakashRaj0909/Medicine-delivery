@@ -25,24 +25,13 @@ const configuredOrigins = (process.env.FRONTEND_URL || '')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-const localDevOrigins = [
-  'http://localhost:8080',
-  'http://localhost:8081',
+const allowedOrigins = Array.from(new Set([
   'http://localhost:5173',
-  'http://localhost:5500',
-  'http://127.0.0.1:5500',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-];
+  'https://medicine-delivery-frontend-six.vercel.app',
+  ...configuredOrigins,
+]));
 
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? configuredOrigins
-  : Array.from(new Set([...configuredOrigins, ...localDevOrigins]));
-
-// Middleware
-app.use(helmet());
-app.use(compression());
-app.use(cors({
+const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -52,9 +41,16 @@ app.use(cors({
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
+// Middleware
+app.use(helmet());
+app.use(compression());
+app.use(cors(corsOptions));
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
