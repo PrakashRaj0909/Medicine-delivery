@@ -5,7 +5,7 @@ import compression from 'compression';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import connectDB from './config/database.js';
+import connectDB, { getMongoConnectionState } from './config/database.js';
 import authRoutes from './routes/auth.js';
 import orderRoutes from './routes/orders.js';
 import prescriptionRoutes from './routes/prescriptions.js';
@@ -17,25 +17,40 @@ const __dirname = path.dirname(__filename);
 // Load environment variables from the backend directory
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-// Connect to MongoDB
-connectDB();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const configuredOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const localDevOrigins = [
+  'http://localhost:8080',
+  'http://localhost:8081',
+  'http://localhost:5173',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+];
+
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? configuredOrigins
+  : Array.from(new Set([...configuredOrigins, ...localDevOrigins]));
 
 // Middleware
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:8080',
-    'http://localhost:8081',
-    'http://localhost:5173',  // Vite
-    'http://localhost:5500',  // Live Server
-    'http://127.0.0.1:5500',  // Live Server (127.0.0.1)
-    'http://localhost:3000',  // Same origin
-    'http://127.0.0.1:3000'   // Same origin (127.0.0.1)
-  ],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -48,7 +63,14 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  const mongoStatus = getMongoConnectionState();
+  const statusCode = mongoStatus === 'connected' ? 200 : 503;
+
+  res.status(statusCode).json({
+    status: mongoStatus === 'connected' ? 'ok' : 'degraded',
+    database: mongoStatus,
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // API Routes
@@ -80,9 +102,19 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Backend server running on http://localhost:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔬 ML-based prescription validation enabled`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Backend server running on http://localhost:${PORT}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔬 ML-based prescription validation enabled`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server due to MongoDB connection error:', error instanceof Error ? error.message : error);
+    process.exit(1);
+  }
+};
+
+startServer();

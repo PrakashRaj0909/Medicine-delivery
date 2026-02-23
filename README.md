@@ -32,7 +32,7 @@ swift-rx-pulse/
 ### Backend
 - Node.js with Express.js
 - TypeScript
-- Supabase (PostgreSQL database)
+- MongoDB (Mongoose ODM)
 - RESTful API architecture
 
 ## 📦 Quick Start
@@ -48,7 +48,7 @@ cd swift-rx-pulse
 cd backend
 npm install
 cp .env.example .env
-# Edit .env with your Supabase credentials
+# Edit .env with your MongoDB/JWT credentials
 npm run dev
 ```
 
@@ -59,7 +59,7 @@ Backend will run on http://localhost:3000
 cd frontend
 npm install
 cp .env.example .env
-# Edit .env with your Supabase credentials
+# Edit .env with your Supabase and API settings
 npm run dev
 ```
 
@@ -69,18 +69,19 @@ Frontend will run on http://localhost:8080
 
 ### Backend (.env)
 ```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/mediexpress?retryWrites=true&w=majority
+JWT_SECRET=replace-with-a-long-random-secret
+JWT_EXPIRES_IN=7d
 PORT=3000
-FRONTEND_URL=http://localhost:8080
+NODE_ENV=development
+FRONTEND_URL=http://localhost:8081
 ```
 
 ### Frontend (.env)
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=
 ```
 
 ## 📱 Features
@@ -109,20 +110,26 @@ The application uses Supabase with the following main tables:
 
 ## 🚀 Deployment
 
-### Frontend
-Can be deployed to:
-- Vercel
-- Netlify
-- Cloudflare Pages
-- Any static hosting
+### Frontend (Vercel)
+- Root directory: `frontend`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variables:
+	- `VITE_SUPABASE_URL`
+	- `VITE_SUPABASE_PUBLISHABLE_KEY`
+	- `VITE_API_URL=https://your-backend.onrender.com`
 
-### Backend
-Can be deployed to:
-- Railway
-- Render
-- Heroku
-- DigitalOcean
-- AWS/GCP/Azure
+### Backend (Render)
+- Root directory: `backend`
+- Build command: `npm install ; npm run build`
+- Start command: `npm start`
+- Environment variables:
+	- `MONGODB_URI`
+	- `JWT_SECRET`
+	- `JWT_EXPIRES_IN`
+	- `NODE_ENV=production`
+	- `PORT=10000` (Render overrides automatically)
+	- `FRONTEND_URL=https://your-vercel-app.vercel.app`
 
 ## 📖 Documentation
 

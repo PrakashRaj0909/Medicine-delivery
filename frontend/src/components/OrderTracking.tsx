@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Package, MapPin, Phone, Star, Truck, Navigation, Clock } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
 interface DeliveryLocation {
   deliveryPartner: {
     name: string;
@@ -32,19 +30,7 @@ const OrderTracking = ({ orderId }: { orderId: string }) => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const token = authService.getToken();
-        const response = await fetch(`${API_URL}/api/orders/${orderId}/delivery-location`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch location');
-        }
-
-        const data = await response.json();
+        const data = await authService.getDeliveryLocation(orderId);
         setTracking(data);
         setError("");
       } catch (err: any) {

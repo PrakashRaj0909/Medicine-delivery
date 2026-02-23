@@ -1,11 +1,20 @@
 # Root level gitignore
 node_modules/
-.env
-.env.local
+**/node_modules/
+uploads/
+**/uploads/
+dist/
+**/dist/
+build/
+**/build/
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+!**/.env.example
 .DS_Store
 *.log
-dist/
-build/
 .vscode/
 .idea/
 
